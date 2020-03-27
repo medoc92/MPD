@@ -31,10 +31,9 @@
 #include <shout/shout.h>
 
 #include <cassert>
+#include <cstdio>
 #include <memory>
 #include <stdexcept>
-
-#include <stdio.h>
 
 static constexpr unsigned DEFAULT_CONN_TIMEOUT = 2;
 
@@ -357,9 +356,9 @@ shout_tag_to_metadata(const Tag &tag, char *dest, size_t size)
 	const char *artist = tag.GetValue(TAG_ARTIST);
 	const char *title = tag.GetValue(TAG_TITLE);
 
-	snprintf(dest, size, "%s - %s",
-		 artist != nullptr ? artist : "",
-		 title != nullptr ? title : "");
+	std::snprintf(dest, size, "%s - %s",
+		     artist != nullptr ? artist : "",
+		     title != nullptr ? title : "");
 }
 
 void

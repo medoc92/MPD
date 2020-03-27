@@ -22,9 +22,8 @@
 #include "util/Exception.hxx"
 
 #include <cerrno>
-
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 static constexpr Domain exception_domain("exception");
 
@@ -33,7 +32,7 @@ LogFormatV(LogLevel level, const Domain &domain,
 	   const char *fmt, std::va_list ap) noexcept
 {
 	char msg[1024];
-	vsnprintf(msg, sizeof(msg), fmt, ap);
+	std::vsnprintf(msg, sizeof(msg), fmt, ap);
 	Log(level, domain, msg);
 }
 
@@ -109,7 +108,7 @@ LogFormat(LogLevel level, const std::exception &e, const char *fmt, ...) noexcep
 	char msg[1024];
 	std::va_list ap;
 	va_start(ap, fmt);
-	vsnprintf(msg, sizeof(msg), fmt, ap);
+	std::vsnprintf(msg, sizeof(msg), fmt, ap);
 	va_end(ap);
 
 	Log(level, e, msg);
@@ -134,7 +133,7 @@ LogFormat(LogLevel level, const std::exception_ptr &ep, const char *fmt, ...) no
 	char msg[1024];
 	std::va_list ap;
 	va_start(ap, fmt);
-	vsnprintf(msg, sizeof(msg), fmt, ap);
+	std::vsnprintf(msg, sizeof(msg), fmt, ap);
 	va_end(ap);
 
 	Log(level, ep, msg);
@@ -143,7 +142,7 @@ LogFormat(LogLevel level, const std::exception_ptr &ep, const char *fmt, ...) no
 void
 LogErrno(const Domain &domain, int e, const char *msg) noexcept
 {
-	LogFormat(LogLevel::ERROR, domain, "%s: %s", msg, strerror(e));
+	LogFormat(LogLevel::ERROR, domain, "%s: %s", msg, std::strerror(e));
 }
 
 void
@@ -156,7 +155,7 @@ static void
 FormatErrnoV(const Domain &domain, int e, const char *fmt, std::va_list ap) noexcept
 {
 	char msg[1024];
-	vsnprintf(msg, sizeof(msg), fmt, ap);
+	std::vsnprintf(msg, sizeof(msg), fmt, ap);
 
 	LogErrno(domain, e, msg);
 }

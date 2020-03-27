@@ -29,20 +29,19 @@
 #include "input/InputStream.hxx"
 #include "tag/Id3Scan.hxx"
 
+#include <cstring>
+
 #ifdef ENABLE_ID3TAG
 #include <id3tag.h>
 #endif
-
-#include <string.h>
-#include <stdlib.h>
 
 bool
 DsdId::Equals(const char *s) const noexcept
 {
 	assert(s != nullptr);
-	assert(strlen(s) == sizeof(value));
+	assert(std::strlen(s) == sizeof(value));
 
-	return memcmp(value, s, sizeof(value)) == 0;
+	return std::memcmp(value, s, sizeof(value)) == 0;
 }
 
 /**
@@ -133,7 +132,7 @@ dsdlib_tag_id3(InputStream &is, TagHandler &handler,
 
 	const id3_length_t count = count64;
 
-	auto *const id3_buf = new id3_byte_t[count];
+	auto id3_buf = new id3_byte_t[count];
 	if (id3_buf == nullptr)
 		return;
 

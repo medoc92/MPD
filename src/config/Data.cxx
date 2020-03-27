@@ -23,8 +23,6 @@
 #include "util/RuntimeError.hxx"
 #include "util/StringAPI.hxx"
 
-#include <stdlib.h>
-
 void
 ConfigData::Clear()
 {
@@ -85,14 +83,13 @@ unsigned
 ConfigData::GetUnsigned(ConfigOption option, unsigned default_value) const
 {
 	const auto *param = GetParam(option);
-	long value;
 	char *endptr;
 
 	if (param == nullptr)
 		return default_value;
 
 	const char *const s = param->value.c_str();
-	value = strtol(s, &endptr, 0);
+	auto value = std::strtol(s, &endptr, 0);
 	if (endptr == s || *endptr != 0 || value < 0)
 		throw FormatRuntimeError("Not a valid non-negative number in line %i",
 					 param->line);
@@ -104,14 +101,13 @@ unsigned
 ConfigData::GetPositive(ConfigOption option, unsigned default_value) const
 {
 	const auto *param = GetParam(option);
-	long value;
 	char *endptr;
 
 	if (param == nullptr)
 		return default_value;
 
-	const char *const s = param->value.c_str();
-	value = strtol(s, &endptr, 0);
+	const auto s = param->value.c_str();
+	auto value = std::strtol(s, &endptr, 0);
 	if (endptr == s || *endptr != 0)
 		throw FormatRuntimeError("Not a valid number in line %i",
 					 param->line);

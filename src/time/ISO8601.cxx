@@ -37,8 +37,6 @@
 #include <cassert>
 #include <stdexcept>
 
-#include <stdlib.h>
-
 StringBuffer<64>
 FormatISO8601(const struct tm &tm) noexcept
 {
@@ -65,7 +63,7 @@ static std::pair<unsigned, unsigned>
 ParseTimeZoneOffsetRaw(const char *&s)
 {
 	char *endptr;
-	unsigned long value = strtoul(s, &endptr, 10);
+	auto value = std::strtoul(s, &endptr, 10);
 	if (endptr == s + 4) {
 		s = endptr;
 		return std::make_pair(value / 100, value % 100);
@@ -75,7 +73,7 @@ ParseTimeZoneOffsetRaw(const char *&s)
 		unsigned hours = value, minutes = 0;
 		if (*s == ':') {
 			++s;
-			minutes = strtoul(s, &endptr, 10);
+			minutes = std::strtoul(s, &endptr, 10);
 			if (endptr != s + 2)
 				throw std::runtime_error("Failed to parse time zone offset");
 

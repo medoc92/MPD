@@ -31,8 +31,7 @@
 #include "ASCII.hxx"
 
 #include <cassert>
-
-#include <string.h>
+#include <cstring>
 
 static const char *
 verify_uri_segment(const char *p) noexcept
@@ -46,7 +45,7 @@ verify_uri_segment(const char *p) noexcept
 	if (dots <= 2 && (*p == 0 || *p == '/'))
 		return nullptr;
 
-	const char *q = strchr(p + 1, '/');
+	auto q = std::strchr(p + 1, '/');
 	return q != nullptr ? q : "";
 }
 
@@ -72,7 +71,7 @@ static const char *
 SkipUriScheme(const char *uri) noexcept
 {
 	const char *const schemes[] = { "http://", "https://", "ftp://" };
-	for (auto scheme : schemes) {
+	for (const auto &scheme : schemes) {
 		auto result = StringAfterPrefixCaseASCII(uri, scheme);
 		if (result != nullptr)
 			return result;
@@ -84,16 +83,16 @@ SkipUriScheme(const char *uri) noexcept
 std::string
 uri_remove_auth(const char *uri) noexcept
 {
-	const char *auth = SkipUriScheme(uri);
+	auto auth = SkipUriScheme(uri);
 	if (auth == nullptr)
 		/* unrecognized URI */
 		return std::string();
 
-	const char *slash = strchr(auth, '/');
+	auto slash = std::strchr(auth, '/');
 	if (slash == nullptr)
-		slash = auth + strlen(auth);
+		slash = auth + std::strlen(auth);
 
-	const char *at = (const char *)memchr(auth, '@', slash - auth);
+	auto at = (const char *)std::memchr(auth, '@', slash - auth);
 	if (at == nullptr)
 		/* no auth info present, do nothing */
 		return std::string();

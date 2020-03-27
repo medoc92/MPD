@@ -29,11 +29,9 @@
 #include "util/Math.hxx"
 #include "Log.hxx"
 
+#include <cstring>
+
 #include <neaacdec.h>
-
-#include <cassert>
-
-#include <string.h>
 
 static const unsigned adts_sample_rates[] =
     { 96000, 88200, 64000, 48000, 44100, 32000, 24000, 22050,
@@ -66,14 +64,14 @@ static size_t
 adts_find_frame(DecoderBuffer &buffer)
 {
 	while (true) {
-		auto data = ConstBuffer<uint8_t>::FromVoid(buffer.Need(8));
+		const auto data = ConstBuffer<uint8_t>::FromVoid(buffer.Need(8));
 		if (data.IsNull())
 			/* failed */
 			return 0;
 
 		/* find the 0xff marker */
-		const auto *p = (const uint8_t *)
-			memchr(data.data, 0xff, data.size);
+		const auto p = (const uint8_t *)
+			std::memchr(data.data, 0xff, data.size);
 		if (p == nullptr) {
 			/* no marker - discard the buffer */
 			buffer.Clear();
@@ -125,7 +123,7 @@ adts_song_duration(DecoderBuffer &buffer)
 			break;
 
 		if (frames == 0) {
-			auto data = ConstBuffer<uint8_t>::FromVoid(buffer.Read());
+			const auto data = ConstBuffer<uint8_t>::FromVoid(buffer.Read());
 			assert(!data.empty());
 			assert(frame_length <= data.size);
 
@@ -169,7 +167,7 @@ faad_song_duration(DecoderBuffer &buffer, InputStream &is)
 		return SignedSongTime::Negative();
 
 	size_t tagsize = 0;
-	if (data.size >= 10 && !memcmp(data.data, "ID3", 3)) {
+	if (data.size >= 10 && !std::memcmp(data.data, "ID3", 3)) {
 		/* skip the ID3 tag */
 
 		tagsize = (data.data[6] << 21) | (data.data[7] << 14) |
@@ -201,7 +199,7 @@ faad_song_duration(DecoderBuffer &buffer, InputStream &is)
 		buffer.Clear();
 
 		return song_length;
-	} else if (data.size >= 5 && memcmp(data.data, "ADIF", 4) == 0) {
+	} else if (data.size >= 5 && std::memcmp(data.data, "ADIF", 4) == 0) {
 		/* obtain the duration from the ADIF header */
 
 		if (!is.KnownSize())
@@ -281,7 +279,7 @@ static const void *
 faad_decoder_decode(NeAACDecHandle decoder, DecoderBuffer &buffer,
 		    NeAACDecFrameInfo *frame_info)
 {
-	auto data = ConstBuffer<uint8_t>::FromVoid(buffer.Read());
+	const auto data = ConstBuffer<uint8_t>::FromVoid(buffer.Read());
 	if (data.empty())
 		return nullptr;
 

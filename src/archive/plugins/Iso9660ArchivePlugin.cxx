@@ -32,9 +32,7 @@
 
 #include <cdio/iso9660.h>
 
-#include <stdlib.h>
-#include <string.h>
-
+#include <cstring>
 #include <utility>
 
 static constexpr size_t
@@ -111,11 +109,11 @@ Iso9660ArchiveFile::Visit(char *path, size_t length, size_t capacity,
 			/* file name is too long */
 			continue;
 
-		memcpy(path + length, filename, filename_length + 1);
+		std::memcpy(path + length, filename, filename_length + 1);
 		size_t new_length = length + filename_length;
 
 		if (iso9660_stat_s::_STAT_DIR == statbuf->type ) {
-			memcpy(path + new_length, "/", 2);
+			std::memcpy(path + new_length, "/", 2);
 			Visit(path, new_length + 1, capacity, visitor);
 		} else {
 			//remove leading /

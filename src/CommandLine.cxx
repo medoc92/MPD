@@ -66,9 +66,6 @@
 #include "archive/ArchivePlugin.hxx"
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-
 namespace {
 #ifdef _WIN32
 constexpr auto CONFIG_FILE_LOCATION = Path::FromFS(PATH_LITERAL("mpd\\mpd.conf"));
@@ -109,184 +106,184 @@ static constexpr Domain cmdline_domain("cmdline");
 [[noreturn]]
 static void version()
 {
-	printf("Music Player Daemon " VERSION " (%s)"
-	       "\n"
-	       "Copyright 2003-2007 Warren Dukes <warren.dukes@gmail.com>\n"
-	       "Copyright 2008-2018 Max Kellermann <max.kellermann@gmail.com>\n"
-	       "This is free software; see the source for copying conditions.  There is NO\n"
-	       "warranty; not even MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n",
-	       GIT_VERSION);
+	std::printf("Music Player Daemon " VERSION " (%s)"
+		    "\n"
+		    "Copyright 2003-2007 Warren Dukes <warren.dukes@gmail.com>\n"
+		    "Copyright 2008-2018 Max Kellermann <max.kellermann@gmail.com>\n"
+		    "This is free software; see the source for copying conditions.  There is NO\n"
+		    "warranty; not even MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n",
+		    GIT_VERSION);
 
 #ifdef ENABLE_DATABASE
-	printf("\n"
-	       "Database plugins:\n");
+	std::printf("\n"
+		    "Database plugins:\n");
 
 	for (auto i = database_plugins; *i != nullptr; ++i)
-		printf(" %s", (*i)->name);
+		std::printf(" %s", (*i)->name);
 
-	printf("\n\n"
-	       "Storage plugins:\n");
+	std::printf("\n\n"
+		    "Storage plugins:\n");
 
 	for (auto i = storage_plugins; *i != nullptr; ++i)
-		printf(" %s", (*i)->name);
+		std::printf(" %s", (*i)->name);
 
-	printf("\n");
+	std::printf("\n");
 #endif
 
 #ifdef ENABLE_NEIGHBOR_PLUGINS
-	printf("\n"
-	       "Neighbor plugins:\n");
+	std::printf("\n"
+		    "Neighbor plugins:\n");
 	for (auto i = neighbor_plugins; *i != nullptr; ++i)
-		printf(" %s", (*i)->name);
+		std::printf(" %s", (*i)->name);
 
 #endif
 
-	printf("\n"
-	       "\n"
-	       "Decoders plugins:\n");
+	std::printf("\n"
+		    "\n"
+		    "Decoders plugins:\n");
 
 	decoder_plugins_for_each([](const DecoderPlugin &plugin){
-			printf(" [%s]", plugin.name);
+			std::printf(" [%s]", plugin.name);
 
 			const char *const*suffixes = plugin.suffixes;
 			if (suffixes != nullptr)
 				for (; *suffixes != nullptr; ++suffixes)
-					printf(" %s", *suffixes);
+					std::printf(" %s", *suffixes);
 
-			printf("\n");
+			std::printf("\n");
 		});
 
-	printf("\n"
-	       "Filters:\n"
+	std::printf("\n"
+		    "Filters:\n"
 #ifdef ENABLE_LIBSAMPLERATE
-	       " libsamplerate"
+		    " libsamplerate"
 #endif
 #ifdef ENABLE_SOXR
-	       " soxr"
+		    " soxr"
 #endif
-	       "\n\n"
-	       "Tag plugins:\n"
+		    "\n\n"
+		    "Tag plugins:\n"
 #ifdef ENABLE_ID3TAG
-	       " id3tag"
+		    " id3tag"
 #endif
-	       "\n\n"
-	       "Output plugins:\n");
+		    "\n\n"
+		    "Output plugins:\n");
 	audio_output_plugins_for_each(plugin)
-		printf(" %s", plugin->name);
-	printf("\n"
+		std::printf(" %s", plugin->name);
+	std::printf("\n"
 
 #ifdef ENABLE_ENCODER
-	       "\n"
-	       "Encoder plugins:\n");
+		    "\n"
+		    "Encoder plugins:\n");
 	encoder_plugins_for_each(plugin)
-		printf(" %s", plugin->name);
-	printf("\n"
+		std::printf(" %s", plugin->name);
+	std::printf("\n"
 #endif
 
 #ifdef ENABLE_ARCHIVE
-	       "\n"
-	       "Archive plugins:\n");
+		    "\n"
+		    "Archive plugins:\n");
 	archive_plugins_for_each(plugin) {
-		printf(" [%s]", plugin->name);
+		std::printf(" [%s]", plugin->name);
 
 		const char *const*suffixes = plugin->suffixes;
 		if (suffixes != nullptr)
 			for (; *suffixes != nullptr; ++suffixes)
-				printf(" %s", *suffixes);
+				std::printf(" %s", *suffixes);
 
-		printf("\n");
+		std::printf("\n");
 	}
 
-	printf(""
+	std::printf(""
 #endif
 
-	       "\n"
-	       "Input plugins:\n"
-	       " file"
+		    "\n"
+		    "Input plugins:\n"
+		    " file"
 #ifdef ENABLE_ARCHIVE
-	       " archive"
+		    " archive"
 #endif
-	       );
+		    );
 	input_plugins_for_each(plugin)
-		printf(" %s", plugin->name);
+		std::printf(" %s", plugin->name);
 
-	printf("\n\n"
-	       "Playlist plugins:\n");
+	std::printf("\n\n"
+		    "Playlist plugins:\n");
 	playlist_plugins_for_each(plugin)
-		printf(" %s", plugin->name);
+		std::printf(" %s", plugin->name);
 
-	printf("\n\n"
-	       "Protocols:\n");
+	std::printf("\n\n"
+		    "Protocols:\n");
 	print_supported_uri_schemes_to_fp(stdout);
 
-	printf("\n"
-	       "Other features:\n"
+	std::printf("\n"
+		    "Other features:\n"
 #ifdef HAVE_AVAHI
-	       " avahi"
+		    " avahi"
 #endif
 #ifdef ENABLE_DBUS
-	       " dbus"
+		    " dbus"
 #endif
 #ifdef ENABLE_UDISKS
-	       " udisks"
+		    " udisks"
 #endif
 #ifdef USE_EPOLL
-	       " epoll"
+		    " epoll"
 #endif
 #ifdef HAVE_ICONV
-	       " iconv"
+		    " iconv"
 #endif
 #ifdef HAVE_ICU
-	       " icu"
+		    " icu"
 #endif
 #ifdef ENABLE_INOTIFY
-	       " inotify"
+		    " inotify"
 #endif
 #ifdef HAVE_IPV6
-	       " ipv6"
+		    " ipv6"
 #endif
 #ifdef ENABLE_SYSTEMD_DAEMON
-	       " systemd"
+		    " systemd"
 #endif
 #ifdef HAVE_TCP
-	       " tcp"
+		    " tcp"
 #endif
 #ifdef HAVE_UN
-	       " un"
+		    " un"
 #endif
-	       "\n");
+		    "\n");
 
-	exit(EXIT_SUCCESS);
+	std::exit(EXIT_SUCCESS);
 }
 
 static void PrintOption(const OptionDef &opt)
 {
 	if (opt.HasShortOption())
-		printf("  -%c, --%-12s%s\n",
-		       opt.GetShortOption(),
-		       opt.GetLongOption(),
-		       opt.GetDescription());
+		std::printf("  -%c, --%-12s%s\n",
+			    opt.GetShortOption(),
+			    opt.GetLongOption(),
+			    opt.GetDescription());
 	else
-		printf("  --%-16s%s\n",
-		       opt.GetLongOption(),
-		       opt.GetDescription());
+		std::printf("  --%-16s%s\n",
+			    opt.GetLongOption(),
+			    opt.GetDescription());
 }
 
 [[noreturn]]
 static void help()
 {
-	printf("Usage:\n"
-	       "  mpd [OPTION...] [path/to/mpd.conf]\n"
-	       "\n"
-	       "Music Player Daemon - a daemon for playing music.\n"
-	       "\n"
-	       "Options:\n");
+	std::printf("Usage:\n"
+		    "  mpd [OPTION...] [path/to/mpd.conf]\n"
+		    "\n"
+		    "Music Player Daemon - a daemon for playing music.\n"
+		    "\n"
+		    "Options:\n");
 
 	for (const auto &i : option_defs)
 		if(i.HasDescription()) // hide hidden options from help print
 			PrintOption(i);
 
-	exit(EXIT_SUCCESS);
+	std::exit(EXIT_SUCCESS);
 }
 
 class ConfigLoader

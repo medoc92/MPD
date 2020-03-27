@@ -32,10 +32,9 @@
 
 #include "util/Compiler.h"
 
+#include <cstdio>
 #include <system_error>
 #include <utility>
-
-#include <stdio.h>
 
 template<typename... Args>
 static inline std::system_error
@@ -43,7 +42,7 @@ FormatSystemError(std::error_code code, const char *fmt,
 		  Args&&... args) noexcept
 {
 	char buffer[1024];
-	snprintf(buffer, sizeof(buffer), fmt, std::forward<Args>(args)...);
+	std::snprintf(buffer, sizeof(buffer), fmt, std::forward<Args>(args)...);
 	return std::system_error(code, buffer);
 }
 
@@ -70,7 +69,7 @@ FormatLastError(DWORD code, const char *fmt, Args&&... args) noexcept
 {
 	char buffer[512];
 	const auto end = buffer + sizeof(buffer);
-	size_t length = snprintf(buffer, sizeof(buffer) - 128,
+	size_t length = std::snprintf(buffer, sizeof(buffer) - 128,
 				 fmt, std::forward<Args>(args)...);
 	char *p = buffer + length;
 	*p++ = ':';
@@ -136,8 +135,8 @@ static inline std::system_error
 FormatErrno(int code, const char *fmt, Args&&... args) noexcept
 {
 	char buffer[512];
-	snprintf(buffer, sizeof(buffer),
-		 fmt, std::forward<Args>(args)...);
+	std::snprintf(buffer, sizeof(buffer),
+		      fmt, std::forward<Args>(args)...);
 	return MakeErrno(code, buffer);
 }
 

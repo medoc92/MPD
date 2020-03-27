@@ -31,9 +31,8 @@
 #include "OutputStream.hxx"
 
 #include <cstdarg>
-
-#include <string.h>
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 
 #ifdef _UNICODE
 #include "system/Error.hxx"
@@ -47,7 +46,7 @@ BufferedOutputStream::AppendToBuffer(const void *data, size_t size) noexcept
 	if (r.size < size)
 		return false;
 
-	memcpy(r.data, data, size);
+	std::memcpy(r.data, data, size);
 	buffer.Append(size);
 	return true;
 }
@@ -73,7 +72,7 @@ BufferedOutputStream::Write(const void *data, size_t size)
 void
 BufferedOutputStream::Write(const char *p)
 {
-	Write(p, strlen(p));
+	Write(p, std::strlen(p));
 }
 
 void
@@ -88,7 +87,7 @@ BufferedOutputStream::Format(const char *fmt, ...)
 	/* format into the buffer */
 	std::va_list ap;
 	va_start(ap, fmt);
-	size_t size = vsnprintf(r.data, r.size, fmt, ap);
+	size_t size = std::vsnprintf(r.data, r.size, fmt, ap);
 	va_end(ap);
 
 	if (gcc_unlikely(size >= r.size)) {
@@ -108,7 +107,7 @@ BufferedOutputStream::Format(const char *fmt, ...)
 
 		/* format into the new buffer */
 		va_start(ap, fmt);
-		size = vsnprintf(r.data, r.size, fmt, ap);
+		size = std::vsnprintf(r.data, r.size, fmt, ap);
 		va_end(ap);
 
 		/* this time, it must fit */

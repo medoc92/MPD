@@ -33,8 +33,7 @@
 
 #include <cassert>
 #include <cstdint>
-
-#include <stdlib.h>
+#include <cstdlib>
 
 struct StringView;
 
@@ -43,7 +42,7 @@ ParseUnsigned(const char *p, char **endptr=nullptr, int base=10) noexcept
 {
 	assert(p != nullptr);
 
-	return (unsigned)strtoul(p, endptr, base);
+	return (unsigned)std::strtoul(p, endptr, base);
 }
 
 static inline int
@@ -51,7 +50,7 @@ ParseInt(const char *p, char **endptr=nullptr, int base=10) noexcept
 {
 	assert(p != nullptr);
 
-	return (int)strtol(p, endptr, base);
+	return (int)std::strtol(p, endptr, base);
 }
 
 static inline uint64_t
@@ -59,7 +58,7 @@ ParseUint64(const char *p, char **endptr=nullptr, int base=10) noexcept
 {
 	assert(p != nullptr);
 
-	return strtoull(p, endptr, base);
+	return std::strtoull(p, endptr, base);
 }
 
 static inline int64_t
@@ -67,7 +66,7 @@ ParseInt64(const char *p, char **endptr=nullptr, int base=10) noexcept
 {
 	assert(p != nullptr);
 
-	return strtoll(p, endptr, base);
+	return std::strtoll(p, endptr, base);
 }
 
 int64_t
@@ -78,7 +77,7 @@ ParseDouble(const char *p, char **endptr=nullptr) noexcept
 {
 	assert(p != nullptr);
 
-	return (double)strtod(p, endptr);
+	return (double)std::strtod(p, endptr);
 }
 
 static inline float
@@ -88,7 +87,7 @@ ParseFloat(const char *p, char **endptr=nullptr) noexcept
 	/* strtof() requires API level 21 */
 	return (float)ParseDouble(p, endptr);
 #else
-	return strtof(p, endptr);
+	return std::strtof(p, endptr);
 #endif
 }
 

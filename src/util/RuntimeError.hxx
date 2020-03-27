@@ -30,17 +30,16 @@
 #ifndef RUNTIME_ERROR_HXX
 #define RUNTIME_ERROR_HXX
 
+#include <cstdio>
 #include <stdexcept>
 #include <utility>
-
-#include <stdio.h>
 
 template<typename... Args>
 static inline std::runtime_error
 FormatRuntimeError(const char *fmt, Args&&... args) noexcept
 {
 	char buffer[1024];
-	snprintf(buffer, sizeof(buffer), fmt, std::forward<Args>(args)...);
+	std::snprintf(buffer, sizeof(buffer), fmt, std::forward<Args>(args)...);
 	return std::runtime_error(buffer);
 }
 
@@ -49,7 +48,7 @@ inline std::invalid_argument
 FormatInvalidArgument(const char *fmt, Args&&... args) noexcept
 {
 	char buffer[1024];
-	snprintf(buffer, sizeof(buffer), fmt, std::forward<Args>(args)...);
+	std::snprintf(buffer, sizeof(buffer), fmt, std::forward<Args>(args)...);
 	return std::invalid_argument(buffer);
 }
 

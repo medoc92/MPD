@@ -36,8 +36,6 @@
 
 #include <string_view>
 
-#include <wchar.h>
-
 gcc_pure gcc_nonnull_all
 static inline bool
 StringIsEmpty(const wchar_t *string) noexcept

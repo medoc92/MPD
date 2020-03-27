@@ -31,8 +31,7 @@
 #include "IPv4Address.hxx"
 
 #include <cassert>
-
-#include <string.h>
+#include <cstring>
 
 static const struct sockaddr_in6 *
 CastToIPv6(const struct sockaddr *p) noexcept
@@ -40,7 +39,7 @@ CastToIPv6(const struct sockaddr *p) noexcept
 	assert(p->sa_family == AF_INET6);
 
 	/* cast through void to work around the bogus alignment warning */
-	const void *q = reinterpret_cast<const void *>(p);
+	auto q = reinterpret_cast<const void *>(p);
 	return reinterpret_cast<const struct sockaddr_in6 *>(q);
 }
 
@@ -52,7 +51,7 @@ IPv6Address::IsAny() const noexcept
 {
 	assert(IsValid());
 
-	return memcmp(&address.sin6_addr,
+	return std::memcmp(&address.sin6_addr,
 		      &in6addr_any, sizeof(in6addr_any)) == 0;
 }
 
@@ -63,7 +62,7 @@ IPv6Address::UnmapV4() const noexcept
 
 	struct sockaddr_in buffer{};
 	buffer.sin_family = AF_INET;
-	memcpy(&buffer.sin_addr, ((const char *)&address.sin6_addr) + 12,
+	std::memcpy(&buffer.sin_addr, ((const char *)&address.sin6_addr) + 12,
 	       sizeof(buffer.sin_addr));
 	buffer.sin_port = address.sin6_port;
 

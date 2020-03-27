@@ -28,9 +28,8 @@
 #include "Log.hxx"
 
 #include <cassert>
-
-#include <string.h>
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 
 HttpdClient::~HttpdClient() noexcept
 {
@@ -72,10 +71,10 @@ HttpdClient::HandleLine(const char *line) noexcept
 	assert(state != State::RESPONSE);
 
 	if (state == State::REQUEST) {
-		if (strncmp(line, "HEAD /", 6) == 0) {
+		if (std::strncmp(line, "HEAD /", 6) == 0) {
 			line += 6;
 			head_method = true;
-		} else if (strncmp(line, "GET /", 5) == 0) {
+		} else if (std::strncmp(line, "GET /", 5) == 0) {
 			line += 5;
 		} else {
 			/* only GET is supported */
@@ -85,18 +84,18 @@ HttpdClient::HandleLine(const char *line) noexcept
 		}
 
 		/* blacklist some well-known request paths */
-		if ((strncmp(line, "favicon.ico", 11) == 0 &&
+		if ((std::strncmp(line, "favicon.ico", 11) == 0 &&
 		     (line[11] == '\0' || line[11] == ' ')) ||
-		    (strncmp(line, "robots.txt", 10) == 0 &&
+		    (std::strncmp(line, "robots.txt", 10) == 0 &&
 		     (line[10] == '\0' || line[10] == ' ')) ||
-		    (strncmp(line, "sitemap.xml", 11) == 0 &&
+		    (std::strncmp(line, "sitemap.xml", 11) == 0 &&
 		     (line[11] == '\0' || line[11] == ' ')) ||
-		    (strncmp(line, ".well-known/", 12) == 0)) {
+		    (std::strncmp(line, ".well-known/", 12) == 0)) {
 			should_reject = true;
 		}
 
-		line = strchr(line, ' ');
-		if (line == nullptr || strncmp(line + 1, "HTTP/", 5) != 0) {
+		line = std::strchr(line, ' ');
+		if (line == nullptr || std::strncmp(line + 1, "HTTP/", 5) != 0) {
 			/* HTTP/0.9 without request headers */
 
 			if (head_method)
@@ -156,14 +155,14 @@ HttpdClient::SendResponse() noexcept
 						   metaint);
 		response = allocated.c_str();
 	} else { /* revert to a normal HTTP request */
-		snprintf(buffer, sizeof(buffer),
-			 "HTTP/1.1 200 OK\r\n"
-			 "Content-Type: %s\r\n"
-			 "Connection: close\r\n"
-			 "Pragma: no-cache\r\n"
-			 "Cache-Control: no-cache, no-store\r\n"
-			 "\r\n",
-			 httpd.content_type);
+		std::snprintf(buffer, sizeof(buffer),
+			      "HTTP/1.1 200 OK\r\n"
+			      "Content-Type: %s\r\n"
+			      "Connection: close\r\n"
+			      "Pragma: no-cache\r\n"
+			      "Cache-Control: no-cache, no-store\r\n"
+			      "\r\n",
+			      httpd.content_type);
 		response = buffer;
 	}
 
@@ -412,8 +411,8 @@ HttpdClient::OnSocketInput(void *data, size_t length) noexcept
 		return InputResult::CLOSED;
 	}
 
-	char *line = (char *)data;
-	char *newline = (char *)memchr(line, '\n', length);
+	auto line = (char *)data;
+	auto newline = (char *)std::memchr(line, '\n', length);
 	if (newline == nullptr)
 		return InputResult::MORE;
 

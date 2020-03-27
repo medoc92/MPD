@@ -58,8 +58,6 @@
 #include <iterator>
 #include <memory>
 
-#include <string.h>
-
 #ifdef HAVE_SIDPLAYFP
 #define LIBSIDPLAYFP_VERSION GCC_MAKE_VERSION(LIBSIDPLAYFP_VERSION_MAJ, LIBSIDPLAYFP_VERSION_MIN, LIBSIDPLAYFP_VERSION_LEV)
 #endif
@@ -177,13 +175,13 @@ gcc_pure
 static unsigned
 ParseSubtuneName(const char *base) noexcept
 {
-	if (memcmp(base, SUBTUNE_PREFIX, sizeof(SUBTUNE_PREFIX) - 1) != 0)
+	if (std::memcmp(base, SUBTUNE_PREFIX, sizeof(SUBTUNE_PREFIX) - 1) != 0)
 		return 0;
 
 	base += sizeof(SUBTUNE_PREFIX) - 1;
 
 	char *endptr;
-	auto track = strtoul(base, &endptr, 10);
+	auto track = std::strtoul(base, &endptr, 10);
 	if (endptr == base || *endptr != '.')
 		return 0;
 

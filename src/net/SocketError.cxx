@@ -19,9 +19,8 @@
 
 #include "SocketError.hxx"
 
+#include <cstring>
 #include <iterator>
-
-#include <string.h>
 
 #ifdef _WIN32
 
@@ -39,7 +38,7 @@ SocketErrorMessage::SocketErrorMessage(socket_error_t code) noexcept
 				     nullptr, code, 0,
 				     buffer, std::size(msg), nullptr);
 	if (nbytes == 0) {
-		strcpy(msg, "Unknown error");
+		std::strcpy(msg, "Unknown error");
 		return;
 	}
 
@@ -48,7 +47,7 @@ SocketErrorMessage::SocketErrorMessage(socket_error_t code) noexcept
 					  msg, std::size(msg),
 					  nullptr, nullptr);
 	if (length <= 0) {
-		strcpy(msg, "WideCharToMultiByte() error");
+		std::strcpy(msg, "WideCharToMultiByte() error");
 		return;
 	}
 #endif
@@ -57,6 +56,6 @@ SocketErrorMessage::SocketErrorMessage(socket_error_t code) noexcept
 #else
 
 SocketErrorMessage::SocketErrorMessage(socket_error_t code) noexcept
-	:msg(strerror(code)) {}
+	:msg(std::strerror(code)) {}
 
 #endif

@@ -26,8 +26,6 @@
 #include <cstdint>
 #include <memory>
 
-#include <string.h>
-
 struct ApeFooter {
 	unsigned char id[8];
 	uint32_t version;
@@ -50,7 +48,7 @@ try {
 	is.Seek(lock, is.GetSize() - sizeof(footer));
 	is.ReadFull(lock, &footer, sizeof(footer));
 
-	if (memcmp(footer.id, "APETAGEX", sizeof(footer.id)) != 0 ||
+	if (std::memcmp(footer.id, "APETAGEX", sizeof(footer.id)) != 0 ||
 	    FromLE32(footer.version) != 2000)
 		return false;
 
@@ -82,8 +80,8 @@ try {
 		remaining -= 4;
 
 		/* get the key */
-		const char *key = p;
-		const char *key_end = (const char *)memchr(p, '\0', remaining);
+		auto key = p;
+		auto key_end = (const char *)std::memchr(p, '\0', remaining);
 		if (key_end == nullptr)
 			break;
 

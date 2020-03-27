@@ -32,7 +32,7 @@
 
 #include "Compiler.h"
 
-#include <string.h>
+#include <cstring>
 
 #ifdef _UNICODE
 #include "WStringAPI.hxx"
@@ -42,56 +42,56 @@ gcc_pure gcc_nonnull_all
 static inline size_t
 StringLength(const char *p) noexcept
 {
-	return strlen(p);
+	return std::strlen(p);
 }
 
 gcc_pure gcc_nonnull_all
 static inline const char *
 StringFind(const char *haystack, const char *needle) noexcept
 {
-	return strstr(haystack, needle);
+	return std::strstr(haystack, needle);
 }
 
 gcc_pure gcc_nonnull_all
 static inline char *
 StringFind(char *haystack, char needle, size_t size) noexcept
 {
-	return (char *)memchr(haystack, needle, size);
+	return (char *)std::memchr(haystack, needle, size);
 }
 
 gcc_pure gcc_nonnull_all
 static inline const char *
 StringFind(const char *haystack, char needle, size_t size) noexcept
 {
-	return (const char *)memchr(haystack, needle, size);
+	return (const char *)std::memchr(haystack, needle, size);
 }
 
 gcc_pure gcc_nonnull_all
 static inline const char *
 StringFind(const char *haystack, char needle) noexcept
 {
-	return strchr(haystack, needle);
+	return std::strchr(haystack, needle);
 }
 
 gcc_pure gcc_nonnull_all
 static inline char *
 StringFind(char *haystack, char needle) noexcept
 {
-	return strchr(haystack, needle);
+	return std::strchr(haystack, needle);
 }
 
 gcc_pure gcc_nonnull_all
 static inline const char *
 StringFindLast(const char *haystack, char needle) noexcept
 {
-	return strrchr(haystack, needle);
+	return std::strrchr(haystack, needle);
 }
 
 gcc_pure gcc_nonnull_all
 static inline char *
 StringFindLast(char *haystack, char needle) noexcept
 {
-	return strrchr(haystack, needle);
+	return std::strrchr(haystack, needle);
 }
 
 gcc_pure gcc_nonnull_all
@@ -119,20 +119,20 @@ gcc_pure gcc_nonnull_all
 static inline const char *
 StringFindAny(const char *haystack, const char *accept) noexcept
 {
-	return strpbrk(haystack, accept);
+	return std::strpbrk(haystack, accept);
 }
 
 static inline char *
 StringToken(char *str, const char *delim) noexcept
 {
-	return strtok(str, delim);
+	return std::strtok(str, delim);
 }
 
 gcc_nonnull_all
 static inline void
 UnsafeCopyString(char *dest, const char *src) noexcept
 {
-	strcpy(dest, src);
+	std::strcpy(dest, src);
 }
 
 gcc_returns_nonnull gcc_nonnull_all
@@ -152,14 +152,14 @@ gcc_pure gcc_nonnull_all
 static inline int
 StringCompare(const char *a, const char *b) noexcept
 {
-	return strcmp(a, b);
+	return std::strcmp(a, b);
 }
 
 gcc_pure gcc_nonnull_all
 static inline int
 StringCompare(const char *a, const char *b, size_t n) noexcept
 {
-	return strncmp(a, b, n);
+	return std::strncmp(a, b, n);
 }
 
 /**
@@ -179,7 +179,7 @@ gcc_pure gcc_nonnull_all
 static inline bool
 StringIsEqual(const char *a, const char *b, size_t length) noexcept
 {
-	return strncmp(a, b, length) == 0;
+	return std::strncmp(a, b, length) == 0;
 }
 
 gcc_pure gcc_nonnull_all
@@ -200,7 +200,7 @@ gcc_pure gcc_nonnull_all
 static inline int
 StringCollate(const char *a, const char *b) noexcept
 {
-	return strcoll(a, b);
+	return std::strcoll(a, b);
 }
 
 /**

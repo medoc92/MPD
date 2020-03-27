@@ -37,10 +37,6 @@
 #include "util/ASCII.hxx"
 #include "util/UriUtil.hxx"
 
-#include <cassert>
-
-#include <stdlib.h>
-
 #define LOCATE_TAG_FILE_KEY     "file"
 #define LOCATE_TAG_FILE_KEY_OLD "filename"
 #define LOCATE_TAG_ANY_KEY      "any"
@@ -71,7 +67,7 @@ locate_parse_type(const char *str) noexcept
 	if (StringEqualsCaseASCII(str, LOCATE_TAG_ANY_KEY))
 		return LOCATE_TAG_ANY_TYPE;
 
-	if (strcmp(str, "base") == 0)
+	if (std::strcmp(str, "base") == 0)
 		return LOCATE_TAG_BASE_TYPE;
 
 	if (strcmp(str, "modified-since") == 0)
@@ -110,7 +106,7 @@ ParseTimeStamp(const char *s)
 		return ParseISO8601(s).first;
 	} catch (...) {
 		char *endptr;
-		unsigned long long value = strtoull(s, &endptr, 10);
+		unsigned long long value = std::strtoull(s, &endptr, 10);
 		if (*endptr == 0 && endptr > s)
 			/* it's an integral UNIX time stamp */
 			return std::chrono::system_clock::from_time_t((time_t)value);
@@ -446,7 +442,7 @@ bool
 SongFilter::HasOtherThanBase() const noexcept
 {
 	for (const auto &i : and_filter.GetItems()) {
-		const auto *f = dynamic_cast<const BaseSongFilter *>(i.get());
+		const auto f = dynamic_cast<const BaseSongFilter *>(i.get());
 		if (f == nullptr)
 			return true;
 	}
@@ -458,7 +454,7 @@ const char *
 SongFilter::GetBase() const noexcept
 {
 	for (const auto &i : and_filter.GetItems()) {
-		const auto *f = dynamic_cast<const BaseSongFilter *>(i.get());
+		const auto f = dynamic_cast<const BaseSongFilter *>(i.get());
 		if (f != nullptr)
 			return f->GetValue();
 	}
@@ -473,7 +469,7 @@ SongFilter::WithoutBasePrefix(const char *_prefix) const noexcept
 	SongFilter result;
 
 	for (const auto &i : and_filter.GetItems()) {
-		const auto *f = dynamic_cast<const BaseSongFilter *>(i.get());
+		const auto f = dynamic_cast<const BaseSongFilter *>(i.get());
 		if (f != nullptr) {
 			const char *s = StringAfterPrefix(f->GetValue(), prefix);
 			if (s != nullptr) {

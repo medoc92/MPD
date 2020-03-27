@@ -23,8 +23,6 @@
 #include "fs/AllocatedPath.hxx"
 #include "util/RuntimeError.hxx"
 
-#include <stdlib.h>
-
 void
 BlockParam::ThrowWithNested() const
 {
@@ -35,9 +33,9 @@ BlockParam::ThrowWithNested() const
 int
 BlockParam::GetIntValue() const
 {
-	const char *const s = value.c_str();
+	const auto s = value.c_str();
 	char *endptr;
-	long value2 = strtol(s, &endptr, 0);
+	auto value2 = std::strtol(s, &endptr, 0);
 	if (endptr == s || *endptr != 0)
 		throw FormatRuntimeError("Not a valid number in line %i", line);
 
@@ -47,9 +45,9 @@ BlockParam::GetIntValue() const
 unsigned
 BlockParam::GetUnsignedValue() const
 {
-	const char *const s = value.c_str();
+	const auto s = value.c_str();
 	char *endptr;
-	unsigned long value2 = strtoul(s, &endptr, 0);
+	auto value2 = std::strtoul(s, &endptr, 0);
 	if (endptr == s || *endptr != 0)
 		throw FormatRuntimeError("Not a valid number in line %i", line);
 
@@ -61,7 +59,7 @@ BlockParam::GetPositiveValue() const
 {
 	const char *const s = value.c_str();
 	char *endptr;
-	unsigned long value2 = strtoul(s, &endptr, 0);
+	unsigned long value2 = std::strtoul(s, &endptr, 0);
 	if (endptr == s || *endptr != 0)
 		throw FormatRuntimeError("Not a valid number in line %i", line);
 

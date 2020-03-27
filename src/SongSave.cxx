@@ -34,8 +34,6 @@
 #include "util/RuntimeError.hxx"
 #include "util/NumberParser.hxx"
 
-#include <stdlib.h>
-
 #define SONG_MTIME "mtime"
 #define SONG_END "song_end"
 
@@ -128,9 +126,9 @@ song_load(TextFile &file, const char *uri,
 		} else if (StringIsEqual(line, "Range")) {
 			char *endptr;
 
-			unsigned start_ms = strtoul(value, &endptr, 10);
-			unsigned end_ms = *endptr == '-'
-				? strtoul(endptr + 1, nullptr, 10)
+			auto start_ms = std::strtoul(value, &endptr, 10);
+			auto end_ms = *endptr == '-'
+				? std::strtoul(endptr + 1, nullptr, 10)
 				: 0;
 
 			song.SetStartTime(SongTime::FromMS(start_ms));

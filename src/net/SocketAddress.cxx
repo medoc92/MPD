@@ -34,8 +34,6 @@
 
 #include <cassert>
 
-#include <string.h>
-
 #ifdef HAVE_UN
 #include <sys/un.h>
 #endif
@@ -51,7 +49,7 @@
 bool
 SocketAddress::operator==(SocketAddress other) const noexcept
 {
-	return size == other.size && memcmp(address, other.address, size) == 0;
+	return size == other.size && std::memcmp(address, other.address, size) == 0;
 }
 
 #ifdef HAVE_UN
@@ -84,7 +82,7 @@ SocketAddress::GetLocalPath() const noexcept
 		/* must be null-terminated */
 		raw.back() == 0 &&
 		/* there must not be any other null byte */
-		memchr(raw.data, 0, raw.size - 1) == nullptr
+		std::memchr(raw.data, 0, raw.size - 1) == nullptr
 		? raw.data
 		: nullptr;
 }

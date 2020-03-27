@@ -41,11 +41,6 @@
 #include "util/StringFormat.hxx"
 #include "util/UriExtract.hxx"
 
-#include <cassert>
-#include <memory>
-#include <string>
-#include <utility>
-
 class CurlStorage final : public Storage {
 	const std::string base;
 
@@ -181,7 +176,7 @@ ParseStatus(const char *s)
 	if (space == nullptr)
 		return 0;
 
-	return strtoul(space + 1, nullptr, 10);
+	return std::strtoul(space + 1, nullptr, 10);
 }
 
 static unsigned
@@ -210,7 +205,7 @@ ParseTimeStamp(const char *s, size_t length)
 static uint64_t
 ParseU64(const char *s)
 {
-	return strtoull(s, nullptr, 10);
+	return std::strtoull(s, nullptr, 10);
 }
 
 static uint64_t

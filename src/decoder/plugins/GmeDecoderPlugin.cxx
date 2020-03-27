@@ -37,11 +37,6 @@
 
 #include <gme/gme.h>
 
-#include <cassert>
-
-#include <stdlib.h>
-#include <string.h>
-
 #define SUBTUNE_PREFIX "tune_"
 
 static constexpr Domain gme_domain("gme");
@@ -78,13 +73,13 @@ gcc_pure
 static unsigned
 ParseSubtuneName(const char *base) noexcept
 {
-	if (memcmp(base, SUBTUNE_PREFIX, sizeof(SUBTUNE_PREFIX) - 1) != 0)
+	if (std::memcmp(base, SUBTUNE_PREFIX, sizeof(SUBTUNE_PREFIX) - 1) != 0)
 		return 0;
 
 	base += sizeof(SUBTUNE_PREFIX) - 1;
 
 	char *endptr;
-	auto track = strtoul(base, &endptr, 10);
+	auto track = std::strtoul(base, &endptr, 10);
 	if (endptr == base || *endptr != '.')
 		return 0;
 

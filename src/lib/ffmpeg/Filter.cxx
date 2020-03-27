@@ -22,7 +22,7 @@
 #include "pcm/AudioFormat.hxx"
 #include "util/RuntimeError.hxx"
 
-#include <stdio.h>
+#include <cstdio>
 
 namespace Ffmpeg {
 
@@ -56,12 +56,12 @@ FilterContext::MakeAudioBufferSource(AudioFormat &audio_format,
 	}
 
 	char abuffer_args[256];
-	sprintf(abuffer_args,
-		"sample_rate=%u:sample_fmt=%s:channels=%u:time_base=1/%u",
-		audio_format.sample_rate,
-		av_get_sample_fmt_name(src_format),
-		audio_format.channels,
-		audio_format.sample_rate);
+	std::sprintf(abuffer_args,
+		     "sample_rate=%u:sample_fmt=%s:channels=%u:time_base=1/%u",
+		     audio_format.sample_rate,
+		     av_get_sample_fmt_name(src_format),
+		     audio_format.channels,
+		     audio_format.sample_rate);
 
 	return {RequireFilterByName("abuffer"), "abuffer", abuffer_args, nullptr, graph_ctx};
 }

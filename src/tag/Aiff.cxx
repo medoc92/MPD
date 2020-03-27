@@ -21,11 +21,8 @@
 #include "input/InputStream.hxx"
 #include "util/ByteOrder.hxx"
 
-#include <cstdint>
-#include <limits>
+#include <cstring>
 #include <stdexcept>
-
-#include <string.h>
 
 struct aiff_header {
 	char id[4];
@@ -47,10 +44,10 @@ aiff_seek_id3(InputStream &is, std::unique_lock<Mutex> &lock)
 
 	aiff_header header;
 	is.ReadFull(lock, &header, sizeof(header));
-	if (memcmp(header.id, "FORM", 4) != 0 ||
+	if (std::memcmp(header.id, "FORM", 4) != 0 ||
 	    (is.KnownSize() && FromBE32(header.size) > is.GetSize()) ||
-	    (memcmp(header.format, "AIFF", 4) != 0 &&
-	     memcmp(header.format, "AIFC", 4) != 0))
+	    (std::memcmp(header.format, "AIFF", 4) != 0 &&
+	     std::memcmp(header.format, "AIFC", 4) != 0))
 		throw std::runtime_error("Not an AIFF file");
 
 	while (true) {
@@ -65,7 +62,7 @@ aiff_seek_id3(InputStream &is, std::unique_lock<Mutex> &lock)
 			   underflow when casting to off_t */
 			throw std::runtime_error("AIFF chunk is too large");
 
-		if (memcmp(chunk.id, "ID3 ", 4) == 0)
+		if (std::memcmp(chunk.id, "ID3 ", 4) == 0)
 			/* found it! */
 			return size;
 

@@ -24,11 +24,6 @@
 #include "fs/AllocatedPath.hxx"
 #include "system/Error.hxx"
 
-#include <cassert>
-
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <fcntl.h>
 
 class PidFile {
@@ -73,7 +68,7 @@ public:
 			return;
 
 		char buffer[64];
-		sprintf(buffer, "%lu\n", (unsigned long)pid);
+		std::sprintf(buffer, "%lu\n", (unsigned long)pid);
 
 		write(fd, buffer, strlen(buffer));
 		close(fd);
@@ -103,7 +98,7 @@ ReadPidFile(Path path) noexcept
 		buffer[nbytes] = 0;
 
 		char *endptr;
-		auto value = strtoul(buffer, &endptr, 10);
+		auto value = std::strtoul(buffer, &endptr, 10);
 		if (endptr > buffer)
 			pid = value;
 	}

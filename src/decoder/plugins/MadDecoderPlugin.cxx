@@ -39,12 +39,6 @@
 #include <id3tag.h>
 #endif
 
-#include <cassert>
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-
 static constexpr unsigned long FRAMES_CUSHION = 2000;
 
 enum class MadDecoderAction {
@@ -365,9 +359,9 @@ MadDecoder::ParseId3(size_t tagsize, Tag *mpd_tag) noexcept
 static signed long
 id3_tag_query(const void *p0, size_t length) noexcept
 {
-	const char *p = (const char *)p0;
+	auto p = (const char *)p0;
 
-	return length >= 10 && memcmp(p, "ID3", 3) == 0
+	return length >= 10 && std::memcmp(p, "ID3", 3) == 0
 		? (p[8] << 7) + p[9] + 10
 		: 0;
 }

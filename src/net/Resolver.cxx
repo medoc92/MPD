@@ -45,9 +45,8 @@
 #endif
 
 #include <cerrno>
-
-#include <string.h>
-#include <stdio.h>
+#include <cstdio>
+#include <cstring>
 
 static inline bool
 ai_is_passive(const struct addrinfo *ai)
@@ -65,7 +64,7 @@ ai_is_passive(const struct addrinfo *ai)
 static void
 FindAndResolveInterfaceName(char *host, size_t size)
 {
-	char *percent = strchr(host, '%');
+	char *percent = std::strchr(host, '%');
 	if (percent == nullptr || percent + 64 > host + size)
 		return;
 
@@ -77,7 +76,7 @@ FindAndResolveInterfaceName(char *host, size_t size)
 	if (i == 0)
 		throw FormatRuntimeError("No such interface: %s", interface);
 
-	sprintf(interface, "%u", i);
+	std::sprintf(interface, "%u", i);
 }
 
 #endif
@@ -104,7 +103,7 @@ Resolve(const char *host_and_port, int default_port,
 #endif
 		}
 
-		memcpy(buffer, eh.host.data, eh.host.size);
+		std::memcpy(buffer, eh.host.data, eh.host.size);
 		buffer[eh.host.size] = 0;
 		host = buffer;
 
@@ -118,7 +117,7 @@ Resolve(const char *host_and_port, int default_port,
 			++port;
 		} else if (*port == 0) {
 			/* no port specified */
-			snprintf(port_string, sizeof(port_string), "%d", default_port);
+			std::snprintf(port_string, sizeof(port_string), "%d", default_port);
 			port = port_string;
 		} else
 			throw std::runtime_error("Garbage after host name");
@@ -127,7 +126,7 @@ Resolve(const char *host_and_port, int default_port,
 			host = nullptr;
 	} else {
 		host = nullptr;
-		snprintf(port_string, sizeof(port_string), "%d", default_port);
+		std::snprintf(port_string, sizeof(port_string), "%d", default_port);
 		port = port_string;
 	}
 
