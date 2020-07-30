@@ -30,6 +30,16 @@ elif not get_option('iconv').disabled()
     have_iconv = true
     conf.set('HAVE_ICONV', have_iconv)
   endif
+  if have_iconv
+    iconvconsttest = '''#include <iconv.h>
+size_t iconv (iconv_t cd, char * *inbuf, size_t *inbytesleft, char * *outbuf, size_t *outbytesleft);
+'''
+    if c_compiler.compiles(iconvconsttest, dependencies : libiconv)
+      conf.set('ICONV_CONST', '')
+    else
+      conf.set('ICONV_CONST', 'const')
+    endif
+  endif
   if not have_iconv and get_option('iconv').enabled()
     error('iconv() not available')
   endif

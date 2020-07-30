@@ -83,7 +83,7 @@ DoConvert(iconv_t conv, const char *src)
 {
 	// TODO: dynamic buffer?
 	char buffer[4096];
-	char *in = const_cast<char *>(src);
+	auto in = (ICONV_CONST char *)(src);
 	char *out = buffer;
 	size_t in_left = strlen(src);
 	size_t out_left = sizeof(buffer);
