@@ -1,7 +1,12 @@
-upnp_dep = dependency('libupnp', version: '>= 1.8', required: get_option('upnp'))
+upnp_dep = dependency('libnpupnp', required: get_option('upnp'))
 conf.set('ENABLE_UPNP', upnp_dep.found())
 if not upnp_dep.found()
   subdir_done()
+endif
+
+microhttpd_dep = dependency('libmicrohttpd')
+if not microhttpd_dep.found()
+  error('UPnP requires MICROHTTPD')
 endif
 
 if not curl_dep.found()

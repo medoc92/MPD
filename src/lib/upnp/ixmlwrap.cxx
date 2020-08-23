@@ -15,6 +15,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#ifdef USING_PUPNP
 #include "ixmlwrap.hxx"
 #include "UniqueIxml.hxx"
 
@@ -39,3 +40,4 @@ getFirstElementValue(IXML_Document *doc, const char *name) noexcept
 }
 
 }
+#endif

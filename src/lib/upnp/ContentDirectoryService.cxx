@@ -17,10 +17,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <algorithm>
+
 #include "ContentDirectoryService.hxx"
 #include "UniqueIxml.hxx"
 #include "Device.hxx"
+#ifdef USING_PUPNP
 #include "ixmlwrap.hxx"
+#endif
 #include "Action.hxx"
 #include "util/UriUtil.hxx"
 #include "util/RuntimeError.hxx"
@@ -51,6 +55,7 @@ ContentDirectoryService::~ContentDirectoryService() noexcept
 std::forward_list<std::string>
 ContentDirectoryService::getSearchCapabilities(UpnpClient_Handle hdl) const
 {
+#ifdef USING_PUPNP
 	UniqueIxmlDocument request(UpnpMakeAction("GetSearchCapabilities", m_serviceType.c_str(),
 						  0,
 						  nullptr, nullptr));
@@ -69,6 +74,25 @@ ContentDirectoryService::getSearchCapabilities(UpnpClient_Handle hdl) const
 
 	const char *s = ixmlwrap::getFirstElementValue(response.get(),
 						       "SearchCaps");
+#else
+	std::vector<std::pair<std::string, std::string> > responseData;
+	int errcode;
+	std::string errdesc;
+	auto code = UpnpSendAction(hdl, "", m_actionURL, m_serviceType,
+				   "GetSearchCapabilities", {}, responseData,
+				   &errcode, errdesc);
+	if (code != UPNP_E_SUCCESS)
+		throw FormatRuntimeError("UpnpSendAction() failed: %s",
+					 UpnpGetErrorMessage(code));
+
+	auto it = std::find_if(responseData.begin(), responseData.end(),
+			       [](const auto &entry) {
+				       return entry.first == "SearchCaps";
+			       });
+
+	const char *s =
+		(it != responseData.end()) ? it->second.c_str() : nullptr;
+#endif
 	if (s == nullptr || *s == 0)
 		/* we could just "return {}" here, but GCC 5 doesn't
 		   understand that */
